@@ -3,13 +3,17 @@ package com.asusoft.mvvmproject.login
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.asusoft.mvvmproject.api.member.MemberDto
 import com.asusoft.mvvmproject.api.member.MemberRepository
 import com.asusoft.mvvmproject.util.TAG
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,20 +32,17 @@ class LoginViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     fun login() {
         Logger.t(TAG.LOGIN).d("click login id: ${id.value}, pw: ${pw.value}")
-        val memberDto = MemberDto(-1, "", id.value, pw.value)
-        memberRepository.login(memberDto)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ memberDto ->
+
+        viewModelScope.launch {
+            val memberDto = MemberDto(-1, "", id.value, pw.value)
+            val response = memberRepository.login(memberDto)
+            if (response.isSuccessful) {
                 autoLogin.value = !(autoLogin.value as Boolean)
                 Logger.t(TAG.LOGIN).d("success login -> $memberDto")
-            }, { thowable ->
-                Logger.t(TAG.LOGIN).d("error -> ${thowable.localizedMessage}")
-            }, { // complete
-
-            }, { subscription ->
-                subscription.request(Long.MAX_VALUE)
-            })
+            } else {
+                Logger.t(TAG.LOGIN).e("error -> ${response.body()}")
+            }
+        }
     }
 
     fun signUp() {
