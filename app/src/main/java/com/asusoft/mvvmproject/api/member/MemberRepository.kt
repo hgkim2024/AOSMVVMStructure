@@ -3,7 +3,6 @@ package com.asusoft.mvvmproject.api.member
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.reactivex.Flowable
 import retrofit2.Response
 import javax.inject.Inject
 

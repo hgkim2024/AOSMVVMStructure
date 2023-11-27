@@ -1,7 +1,5 @@
 package com.asusoft.mvvmproject.api.member
 
-import io.reactivex.Flowable
-import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.QueryMap
