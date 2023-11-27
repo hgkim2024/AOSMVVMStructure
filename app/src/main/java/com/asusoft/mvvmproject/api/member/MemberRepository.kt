@@ -16,4 +16,9 @@ class MemberRepository @Inject constructor(
         val map = objectMapper.convertValue<Map<String, String>>(dto)
         return memberService.login(map)
     }
+
+    suspend fun signup(dto: MemberDto): Response<Long> {
+        val map = objectMapper.convertValue<Map<String, String>>(dto)
+        return memberService.signUp(map)
+    }
 }

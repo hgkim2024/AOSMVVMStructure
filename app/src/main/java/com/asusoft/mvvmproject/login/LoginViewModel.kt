@@ -1,11 +1,13 @@
 package com.asusoft.mvvmproject.login
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asusoft.mvvmproject.api.member.MemberDto
 import com.asusoft.mvvmproject.api.member.MemberRepository
+import com.asusoft.mvvmproject.signup.SignUpActivity
 import com.asusoft.mvvmproject.util.TAG
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,22 +29,23 @@ class LoginViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     fun login() {
-        Logger.t(TAG.LOGIN).d("click login id: ${id.value}, pw: ${pw.value}")
+        Logger.t(TAG.LOGIN).d("login -> id: ${id.value}, pw: ${pw.value}")
 
         viewModelScope.launch {
-            val memberDto = MemberDto(-1, "", id.value, pw.value)
-            val response = memberRepository.login(memberDto)
+            val loginMemberDto = MemberDto(-1, "", id.value, pw.value)
+            val response = memberRepository.login(loginMemberDto)
             if (response.isSuccessful) {
                 autoLogin.value = !(autoLogin.value as Boolean)
-                Logger.t(TAG.LOGIN).d("success login -> $memberDto")
+                Logger.t(TAG.LOGIN).d("success login -> $loginMemberDto")
             } else {
-                Logger.t(TAG.LOGIN).e("error -> ${response.body()}")
+                Logger.t(TAG.LOGIN).e("error login -> ${response.body()}")
             }
         }
     }
 
     fun signUp() {
-        // TODO: - 개발
+        // TODO: - go to sign up screen
+//        val intent = Intent(this, SignUpActivity::class.java)
     }
 
 }
