@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import com.asusoft.mvvmproject.databinding.ActivityLoginBinding
 import com.asusoft.mvvmproject.signup.SignUpActivity
 import com.asusoft.mvvmproject.util.EventObserver
+import com.asusoft.mvvmproject.util.TAG
+import com.orhanobut.logger.Logger
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.startSignUpEvent.observe(
             this,
             EventObserver {
+                Logger.t(TAG.SIGN_UP).d("go to SignUpActivity screen")
                 val intent = Intent(this, SignUpActivity::class.java)
                 startActivity(intent)
             }
