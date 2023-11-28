@@ -32,12 +32,11 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             val createMemberDto = MemberDto(-1, nickname.value, id.value, pw.value)
             val response = memberRepository.signup(createMemberDto)
-            val body = response.body()
 
             if (response.isSuccessful) {
-                Logger.t(TAG.SIGN_UP).d("success sign up -> $body")
+                Logger.t(TAG.SIGN_UP).d("success sign up -> ${response.body()}")
             } else {
-                Logger.t(TAG.SIGN_UP).e("error sign up -> $body")
+                Logger.t(TAG.SIGN_UP).e("error sign up -> ${response.errorBody()?.string()}")
             }
         }
 
