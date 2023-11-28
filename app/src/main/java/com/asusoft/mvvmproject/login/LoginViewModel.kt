@@ -2,12 +2,14 @@ package com.asusoft.mvvmproject.login
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asusoft.mvvmproject.api.member.MemberDto
 import com.asusoft.mvvmproject.api.member.MemberRepository
 import com.asusoft.mvvmproject.signup.SignUpActivity
+import com.asusoft.mvvmproject.util.Event
 import com.asusoft.mvvmproject.util.TAG
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +29,9 @@ class LoginViewModel @Inject constructor(
     val pw = MutableLiveData<String>(pwString)
     val autoLogin = MutableLiveData<Boolean>(false)
 
+    private val _startSignUpEvent = MutableLiveData<Event<Unit>>()
+    val startSignUpEvent: LiveData<Event<Unit>> = _startSignUpEvent
+
     @SuppressLint("CheckResult")
     fun login() {
         Logger.t(TAG.LOGIN).d("login -> id: ${id.value}, pw: ${pw.value}")
@@ -44,8 +49,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun signUp() {
-        // TODO: - go to sign up screen
-//        val intent = Intent(this, SignUpActivity::class.java)
+        _startSignUpEvent.value = Event(Unit)
     }
 
 }

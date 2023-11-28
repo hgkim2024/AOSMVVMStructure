@@ -28,6 +28,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp() {
         Logger.t(TAG.SIGN_UP).d("signUp -> id: ${id.value}, pw: ${pw.value}")
 
+        // TODO: - 데이터 유효성 체크
         viewModelScope.launch {
             val createMemberDto = MemberDto(-1, nickname.value, id.value, pw.value)
             val response = memberRepository.signup(createMemberDto)
