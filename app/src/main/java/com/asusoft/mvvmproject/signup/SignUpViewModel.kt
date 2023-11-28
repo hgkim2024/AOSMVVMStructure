@@ -36,6 +36,7 @@ class SignUpViewModel @Inject constructor(
             if (response.isSuccessful) {
                 Logger.t(TAG.SIGN_UP).d("success sign up -> ${response.body()}")
             } else {
+                // TODO: - 예외 처리 공통화(ex 예외 발생 시 toast) or 더 좋은 예외 처리 방식 공부
                 Logger.t(TAG.SIGN_UP).e("error sign up -> ${response.errorBody()?.string()}")
             }
         }
