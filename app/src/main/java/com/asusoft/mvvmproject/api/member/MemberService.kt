@@ -1,18 +1,19 @@
 package com.asusoft.mvvmproject.api.member
 
+import io.reactivex.Flowable
 import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.QueryMap
 
 interface MemberService {
     @POST("member/login")
-    suspend fun login(
+    fun login(
         @QueryMap map: Map<String, String>
-    ): Response<MemberDto>
+    ): Flowable<Response<MemberDto>>
 
     @POST("member/signup")
-    suspend fun signUp(
+    fun signUp(
         @QueryMap map: Map<String, String>
-    ): Response<Long>
+    ): Flowable<Response<Long>>
 
 }

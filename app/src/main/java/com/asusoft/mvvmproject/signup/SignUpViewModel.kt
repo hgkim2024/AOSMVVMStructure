@@ -8,6 +8,8 @@ import com.asusoft.mvvmproject.api.member.MemberRepository
 import com.asusoft.mvvmproject.util.TAG
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,19 +28,25 @@ class SignUpViewModel @Inject constructor(
     val nickname = MutableLiveData<String>(nicknameString)
 
     fun signUp() {
-        Logger.t(TAG.SIGN_UP).d("signUp -> id: ${id.value}, pw: ${pw.value}")
-
         // TODO: - 데이터 유효성 체크
         viewModelScope.launch {
             val createMemberDto = MemberDto(-1, nickname.value, id.value, pw.value)
-            val response = memberRepository.signup(createMemberDto)
+            val signUpInfo = "sign up -> name: ${nickname.value} id: ${id.value}, pw: ${pw.value}\n"
 
-            if (response.isSuccessful) {
-                Logger.t(TAG.SIGN_UP).d("success sign up -> ${response.body()}")
-            } else {
-                // TODO: - 예외 처리 공통화(ex 예외 발생 시 toast) or 더 좋은 예외 처리 방식 공부
-                Logger.t(TAG.SIGN_UP).e("error sign up -> ${response.errorBody()?.string()}")
-            }
+            memberRepository.signup(createMemberDto)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { response ->
+                        if (response.isSuccessful) {
+                            Logger.t(TAG.LOGIN).d("${signUpInfo}success sign up -> ${response.body()}")
+                        } else {
+                            Logger.t(TAG.LOGIN).e("${signUpInfo}error sign up -> ${response.errorBody()?.string()}")
+                        }
+                    }, { throwable ->
+                        Logger.t(TAG.LOGIN).e("${signUpInfo}exception sign up -> ${throwable.localizedMessage}")
+                    }
+                )
         }
 
     }
