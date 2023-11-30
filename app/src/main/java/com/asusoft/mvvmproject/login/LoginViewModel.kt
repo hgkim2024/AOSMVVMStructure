@@ -5,14 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asusoft.mvvmproject.api.ApiResult
 import com.asusoft.mvvmproject.api.member.MemberDto
 import com.asusoft.mvvmproject.api.member.MemberRepository
+import com.asusoft.mvvmproject.result
 import com.asusoft.mvvmproject.util.Event
 import com.asusoft.mvvmproject.util.TAG
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,21 +39,40 @@ class LoginViewModel @Inject constructor(
             val loginMemberDto = MemberDto(-1, "", id.value, pw.value)
             val loginInfo = "login -> id: ${id.value}, pw: ${pw.value}\n"
 
-            memberRepository.login(loginMemberDto)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { response ->
-                        autoLogin.value = !(autoLogin.value as Boolean)
-                        if (response.isSuccessful) {
-                            Logger.t(TAG.LOGIN).d("${loginInfo}success login -> ${response.body()}")
-                        } else {
-                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${response.errorBody()?.string()}")
+            memberRepository.login(loginMemberDto).result()
+                .catch { throwable ->
+                    Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${throwable.localizedMessage}")
+                }.collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Logger.t(TAG.LOGIN).d("${loginInfo}success login -> ${result.data}")
                         }
-                    }, { throwable ->
-                        Logger.t(TAG.LOGIN).e("${loginInfo}exception login -> ${throwable.localizedMessage}")
+
+                        is ApiResult.Error -> {
+                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${result.data}")
+                        }
+
+                        is ApiResult.Loading -> {
+                            Logger.t(TAG.LOGIN).e("${loginInfo}loading login")
+                        }
                     }
-                )
+                }
+
+//            memberRepository.login(loginMemberDto)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                    { response ->
+//                        autoLogin.value = !(autoLogin.value as Boolean)
+//                        if (response.isSuccessful) {
+//                            Logger.t(TAG.LOGIN).d("${loginInfo}success login -> ${response.body()}")
+//                        } else {
+//                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${response.errorBody()?.string()}")
+//                        }
+//                    }, { throwable ->
+//                        Logger.t(TAG.LOGIN).e("${loginInfo}exception login -> ${throwable.localizedMessage}")
+//                    }
+//                )
         }
     }
 
