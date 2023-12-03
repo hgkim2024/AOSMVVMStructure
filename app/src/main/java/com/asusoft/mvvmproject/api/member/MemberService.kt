@@ -11,7 +11,7 @@ interface MemberService {
     ): Response<MemberDto>
 
     @POST("member/signup")
-    fun signUp(
+    suspend fun signUp(
         @QueryMap map: Map<String, String>
     ): Response<Long>
 

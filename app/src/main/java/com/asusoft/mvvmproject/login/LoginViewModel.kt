@@ -48,31 +48,12 @@ class LoginViewModel @Inject constructor(
                             Logger.t(TAG.LOGIN).d("${loginInfo}success login -> ${result.data}")
                         }
 
-                        is ApiResult.Error -> {
-                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${result.data}")
-                        }
-
+                        is ApiResult.Error,
                         is ApiResult.Loading -> {
-                            Logger.t(TAG.LOGIN).e("${loginInfo}loading login")
+                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${result.message}")
                         }
                     }
                 }
-
-//            memberRepository.login(loginMemberDto)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                    { response ->
-//                        autoLogin.value = !(autoLogin.value as Boolean)
-//                        if (response.isSuccessful) {
-//                            Logger.t(TAG.LOGIN).d("${loginInfo}success login -> ${response.body()}")
-//                        } else {
-//                            Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${response.errorBody()?.string()}")
-//                        }
-//                    }, { throwable ->
-//                        Logger.t(TAG.LOGIN).e("${loginInfo}exception login -> ${throwable.localizedMessage}")
-//                    }
-//                )
         }
     }
 

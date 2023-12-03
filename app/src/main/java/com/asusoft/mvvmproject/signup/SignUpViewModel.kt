@@ -43,29 +43,12 @@ class SignUpViewModel @Inject constructor(
                             Logger.t(TAG.LOGIN).d("${signUpInfo}success sign up -> ${result.data}")
                         }
 
-                        is ApiResult.Error -> {
-                            Logger.t(TAG.LOGIN).e("${signUpInfo}error sign up -> ${result.data}")
-                        }
-
+                        is ApiResult.Error,
                         is ApiResult.Loading -> {
-                            Logger.t(TAG.LOGIN).e("${signUpInfo}loading sign up -> ${result.data}")
+                            Logger.t(TAG.LOGIN).e("${signUpInfo}error sign up -> ${result.message}")
                         }
                     }
                 }
-//            memberRepository.signup(createMemberDto)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                    { response ->
-//                        if (response.isSuccessful) {
-//                            Logger.t(TAG.LOGIN).d("${signUpInfo}success sign up -> ${response.body()}")
-//                        } else {
-//                            Logger.t(TAG.LOGIN).e("${signUpInfo}error sign up -> ${response.errorBody()?.string()}")
-//                        }
-//                    }, { throwable ->
-//                        Logger.t(TAG.LOGIN).e("${signUpInfo}exception sign up -> ${throwable.localizedMessage}")
-//                    }
-//                )
         }
 
     }
