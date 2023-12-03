@@ -12,7 +12,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -29,10 +28,6 @@ object RetrofitClient {
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder().setLenient().create()
-
-    @Provides
-    @Singleton
-    fun provideRxJava(): RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
 
     @Singleton
     @Provides
@@ -73,10 +68,9 @@ object RetrofitClient {
 
     @Singleton
     @Provides
-    fun provideRetrofit(client: OkHttpClient, gson: Gson, rxjava: RxJava2CallAdapterFactory): Retrofit =
+    fun provideRetrofit(client: OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
             .baseUrl(url)
-            .addCallAdapterFactory(rxjava)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
