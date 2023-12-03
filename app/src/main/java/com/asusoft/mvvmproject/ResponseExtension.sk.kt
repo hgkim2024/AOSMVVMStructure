@@ -24,9 +24,10 @@ fun <T> Response<T>.result(): Flow<ApiResult<T & Any>> {
                 val errorMsg = try {
                     Gson().fromJson(errorBody, ErrorResult::class.java).toString()
                 } catch (e: Exception) {
-                    errorBody
+                    errorBody ?: DEFAULT_FAIL_MSG
                 }
-                emit(ApiResult.Error(errorMsg ?: DEFAULT_FAIL_MSG))
+                MVVMApplication.showErrorToast(errorMsg)
+                emit(ApiResult.Error(errorMsg))
             }
         } catch (e: Exception) {
             emit(ApiResult.Error(e.localizedMessage ?: DEFAULT_FAIL_MSG))
