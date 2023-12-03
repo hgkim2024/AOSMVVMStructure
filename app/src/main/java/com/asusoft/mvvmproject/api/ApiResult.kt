@@ -6,5 +6,5 @@ sealed class ApiResult<T>(
 ) {
     class Success<T>(data: T) : ApiResult<T>(data)
     class Error<T>(message: String, data: T? = null) : ApiResult<T>(data, message)
-    class Loading<T> : ApiResult<T>()
+    class Loading<T>(message: String = "Loading ...") : ApiResult<T>()
 }
