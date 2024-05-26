@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asusoft.mvvmproject.api.ApiResult
-import com.asusoft.mvvmproject.api.member.MemberDto
+import com.asusoft.mvvmproject.api.member.MemberModel
 import com.asusoft.mvvmproject.api.member.MemberRepository
 import com.asusoft.mvvmproject.result
 import com.asusoft.mvvmproject.util.Event
@@ -36,10 +36,10 @@ class LoginViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     fun login() {
         viewModelScope.launch {
-            val loginMemberDto = MemberDto(-1, "", id.value, pw.value)
+            val loginMemberModel = MemberModel(-1, "", id.value, pw.value)
             val loginInfo = "login -> id: ${id.value}, pw: ${pw.value}\n"
 
-            memberRepository.login(loginMemberDto).result()
+            memberRepository.login(loginMemberModel).result()
                 .catch { throwable ->
                     Logger.t(TAG.LOGIN).e("${loginInfo}error login -> ${throwable.localizedMessage}")
                 }.collect { result ->

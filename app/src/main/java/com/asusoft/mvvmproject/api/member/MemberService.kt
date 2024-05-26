@@ -8,7 +8,7 @@ interface MemberService {
     @POST("member/login")
     suspend fun login(
         @QueryMap map: Map<String, String>
-    ): Response<MemberDto>
+    ): Response<MemberModel>
 
     @POST("member/signup")
     suspend fun signUp(

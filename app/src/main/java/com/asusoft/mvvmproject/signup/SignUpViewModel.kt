@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asusoft.mvvmproject.api.ApiResult
-import com.asusoft.mvvmproject.api.member.MemberDto
+import com.asusoft.mvvmproject.api.member.MemberModel
 import com.asusoft.mvvmproject.api.member.MemberRepository
 import com.asusoft.mvvmproject.result
 import com.asusoft.mvvmproject.util.TAG
@@ -31,10 +31,10 @@ class SignUpViewModel @Inject constructor(
     fun signUp() {
         // TODO: - 데이터 유효성 체크
         viewModelScope.launch {
-            val createMemberDto = MemberDto(-1, nickname.value, id.value, pw.value)
+            val createMemberModel = MemberModel(-1, nickname.value, id.value, pw.value)
             val signUpInfo = "sign up -> name: ${nickname.value} id: ${id.value}, pw: ${pw.value}\n"
 
-            memberRepository.signup(createMemberDto).result()
+            memberRepository.signup(createMemberModel).result()
                 .catch { throwable ->
                     Logger.t(TAG.LOGIN).e("${signUpInfo}exception sign up -> ${throwable.localizedMessage}")
                 }.collect { result ->

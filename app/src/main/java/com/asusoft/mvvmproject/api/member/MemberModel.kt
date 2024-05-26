@@ -1,6 +1,6 @@
 package com.asusoft.mvvmproject.api.member
 
-data class MemberDto(
+data class MemberModel(
     var key: Long,
     var name: String?,
     var id: String?,
